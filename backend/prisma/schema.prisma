@@ -26,6 +26,8 @@ model Upload {
   id        String   @id @default(uuid())
   userId    String
   fileName  String
+  fileStorageName String @default("NULL")
+  filePath String @default("NULL")
   size      Int
   mimetype  String
   createdAt DateTime @default(now())

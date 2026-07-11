@@ -10,6 +10,8 @@ export class Upload {
     public fileName: string,
     public size: number,
     public mimetype: string,
+    public filePath: string,
+    public fileStorageName: string,
     id?: string,
     createdAt?: string,
     updatedAt?: string
@@ -20,8 +22,8 @@ export class Upload {
     this.updatedAt = updatedAt ?? new Date().toISOString();
   }
 
-  static create(userId: string, fileName: string, size: number, mimetype: string): Upload {
-    return new Upload(userId, fileName, size, mimetype);
+  static create(userId: string, fileName: string, size: number, mimetype: string, filePath: string, fileStorageName: string): Upload {
+    return new Upload(userId, fileName, size, mimetype, filePath, fileStorageName);
   }
 
   static restore(props: {
@@ -30,6 +32,8 @@ export class Upload {
     fileName: string;
     size: number;
     mimetype: string;
+    filePath: string;
+    fileStorageName?: string;
     createdAt: string;
     updatedAt: string;
   }): Upload {
@@ -39,6 +43,8 @@ export class Upload {
       props.size,
       props.mimetype,
       props.id,
+      props.filePath,
+      props.fileStorageName,
       props.createdAt,
       props.updatedAt
     );
@@ -51,6 +57,7 @@ export class Upload {
       fileName: upload.getFileName(),
       size: upload.getSize(),
       mimetype: upload.getMimetype(),
+      fileStorageName: upload.getFileStorageName(),
       createdAt: upload.getCreatedAt(),
       updatedAt: upload.getUpdatedAt(),
     };
@@ -61,12 +68,12 @@ export class Upload {
   }
 
   private validateMimetype(mimetype: string): boolean {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'text/csv'];
     return allowedTypes.includes(mimetype);
   }
 
   private validateFileName(fileName: string): boolean {
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.csv'];
     const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
     return allowedExtensions.includes(`.${fileExtension}`);
   }
@@ -90,4 +97,6 @@ export class Upload {
   getMimetype(): string { return this.mimetype; }
   getCreatedAt(): string { return this.createdAt; }
   getUpdatedAt(): string { return this.updatedAt; }
+  getFileStorageName(): string { return this.fileStorageName; }
+  getFilePath(): string { return this.filePath; }
 }

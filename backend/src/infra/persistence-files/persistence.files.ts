@@ -14,12 +14,12 @@ export class PersistenceFilesProvider implements IPersistFile{
     mkdirSync(this.UPLOAD_DIR, {recursive: true});
   }
   
-  async saveFile(buffer: Buffer, filename: string, userId: string): Promise<string> {
+  async saveFile(buffer: Buffer, filename: string, userId: string): Promise<[string, string]> {
     const userDirPath = path.join(this.UPLOAD_DIR, userId);
     await mkdir(userDirPath, { recursive: true });
     
     const timestamp = Date.now();
-    const uniqueFilename = `$${timestamp}:${filename}`;
+    const uniqueFilename = `${timestamp}:${filename}`;
     
     const filePath = path.join(userDirPath, uniqueFilename)
     writeFile(filePath, buffer, (err) => {
@@ -27,10 +27,12 @@ export class PersistenceFilesProvider implements IPersistFile{
         throw new Error(`Error saving file: ${err.message}`);
       }
     });
-    return Promise.resolve(filePath);
+    const pathToSaveDb = filePath.substring(filePath.indexOf("/uploads-data"))
+    return Promise.resolve([pathToSaveDb, uniqueFilename]);
   }
   
-  deleteFile(filePath: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  deleteFile(userId: string, filePath: string): Promise<void> {
+    const dirToSearch = path.join(this.UPLOAD_DIR, userId);
+    const fileToDelete = path.join(dirToSearch, filePath);
   }
 }

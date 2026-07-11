@@ -4,6 +4,7 @@ export interface UploadResponseDTO {
   fileName: string;
   size: number;
   mimetype: string;
+  fileStorageName?: string;
   createdAt: string;
   updatedAt: string;
 }

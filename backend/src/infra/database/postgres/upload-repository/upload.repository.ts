@@ -7,8 +7,8 @@ export class UploadRepository implements IUploadRepository {
 
   constructor(private client: PrismaClient) { }
   
-  async createUpload(userId: string, fileName: string, size: number, mimetype: string): Promise<string> {
-    const newUpload = Upload.create(userId, fileName, size, mimetype);
+  async createUpload(userId: string, fileName: string, size: number, mimetype: string, filePath: string, fileStotorageName: string): Promise<string> {
+    const newUpload = Upload.create(userId, fileName, size, mimetype, filePath, fileStotorageName);
     const uploadId = (await this.client.upload.create({ data: UploadMapper.toPersistence(newUpload) })).id;
     return uploadId;
   }
@@ -20,8 +20,8 @@ export class UploadRepository implements IUploadRepository {
    return UploadMapper.toDomain(uploadExists);
   }
   
-  async getUploadsByUserId(userId: string): Promise<Upload[]> {
-    const uploadsExists = await this.client.upload.findMany({ where: { userId } });
+  async getUploadsByUserId(userId: string, page: number, limit: number): Promise<Upload[]> {
+    const uploadsExists = await this.client.upload.findMany({ where: { userId }, skip: (page - 1) * limit, take: limit });
     if (!uploadsExists) {
       return [];
     }

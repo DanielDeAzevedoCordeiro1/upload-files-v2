@@ -9,6 +9,8 @@ export class UploadMapper {
         fileName: raw.fileName,
         size: raw.size,
         mimetype: raw.mimetype,
+        filePath: raw.filePath,
+        fileStorageName: raw.fileStorageName,
         createdAt: raw.createdAt.toDateString(),
         updatedAt: raw.updatedAt.toISOString(),
       });
@@ -21,6 +23,8 @@ export class UploadMapper {
         fileName: user.getFileName(),
         size: user.getSize(),
         mimetype: user.getMimetype(),
+        filePath: user.getFilePath(),
+        fileStorageName: user.getFileStorageName(),
         createdAt: new Date(user.getCreatedAt()),
         updatedAt: new Date(user.getUpdatedAt()),
       };
